@@ -1,0 +1,13 @@
+main:
+    resource: "@MainBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+web_service:
+    resource: "@WebServiceBundle/Controller/"
+    type:     annotation
+
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
