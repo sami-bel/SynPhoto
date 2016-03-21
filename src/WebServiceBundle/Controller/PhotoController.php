@@ -49,7 +49,7 @@ class PhotoController extends Controller
         $response = new Response($pathSer);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-        //return new Response('ok');
+
     }
 
 
@@ -61,7 +61,7 @@ class PhotoController extends Controller
         foreach ($album as $a)
         {
 
-            $listPath[]=$a->getPath() ;
+            $listPath[]='http://rattrapage-1.estiam.com/rattrapage/web/'.$a->getPath() ;
 
         }
 

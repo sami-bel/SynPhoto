@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="contenuIn">
+        <div class="" >
+            {% for message in app.session.flashbag.get('success') %}
+                {{ message }}
+            {% endfor %}
+            <a href="{{ path('album_new') }}" class="btn btn-info pull-right" role="button"> New album </a>
+        </div> </br>
+        <div>
+
+            <h1>Albums list</h1>
+
+            <table class="table table-hover" id="someid">
+                <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th> Description</th>
+                </tr>
+
+                </thead>
+                <tbody>
+                {% for album in albums %}
+                    <tr>
+                        <td><a href="{{ path ('photo_list',{ 'id': album.id }) }}">{{ album.titre}}</a></td>
+                        <td>{{ album.description }}</td>
+                        <td>
+
+                            <form action="{{ path('albums_delete') }}" method="POST">
+                                <input type="hidden" id="form_id" name="album_id" class="form-control" value="{{ album.id }}" />
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete_album') }}" />
+                                <a href="{{ path ('album_update',{ 'id': album.id }) }}" > Edit </a>
+                                <button class="btn btn-link">Delete</button>
+
+                            </form>
+
+                        </td>
+                        {#<td>#}
+                            {#<a href="{{ path('album_update', { 'id': album.id }) }}" class="btn btn-info" role="button">Modify</a>#}
+
+                            {#<form action="{{ path('album_delete') }}" method="POST">#}
+                                {#<input type="hidden" id="form_id" name="article_id" class="form-control" value="{{ album.id }}" />#}
+                                {#<input type="hidden" name="_csrf_token" value="{{ csrf_token('delete_album') }}" />#}
+
+                                {#<button type="submit" class="btn btn-danger">Delete</button>#}
+                            {#</form>#}
+                        {#</td>#}
+                    </tr>
+                {% else %}
+                    There is no album yet in database.
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

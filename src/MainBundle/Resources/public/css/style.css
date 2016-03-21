@@ -1,0 +1,31 @@
+body
+  {   background-image:
+        url(../images/body.jpg)
+  }
+
+.contenu
+  {
+    background-color: ThreeDFace;
+    padding-bottom: 10%;
+    border-radius: 1px;
+    margin-top: 2%;
+    margin-outside: 400px;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+
+.contenuIn
+{
+  padding-top: 10px;
+  margin-bottom: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
+
+}
+
+#someid tr td:nth-child(3){
+  width:15%;
+}
+#someid tr td:nth-child(1){
+  width:15%;
+}

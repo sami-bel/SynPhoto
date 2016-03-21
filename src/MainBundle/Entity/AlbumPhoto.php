@@ -22,7 +22,8 @@ class AlbumPhoto
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="MainBundle\Entity\Album")
+     *
+     * @ORM\ManyToOne(targetEntity="MainBundle\Entity\Album",inversedBy="photos", cascade={"remove"}))
      * @ORM\JoinColumn(nullable=false)
      */
     private $album;

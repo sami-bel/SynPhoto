@@ -31,12 +31,25 @@ class Album
     /**
      * @var string
      *
+     * @ORM\Column(name="description", type="string", length=255)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="path", type="string", length=255)
      */
     private $path;
 
 
     /**
+     * @ORM\OneToMany(targetEntity="AlbumPhoto", mappedBy="album", cascade={"remove", "persist"})
+     */
+    protected $photos;
+
+    /**
+     *
      * Get id
      *
      * @return int
@@ -92,6 +105,30 @@ class Album
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Set path
+     *
+     * @param string $description
+     *
+     * @return Album
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get path
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }
 

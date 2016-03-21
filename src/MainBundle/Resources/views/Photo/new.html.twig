@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="contenuIn">
+        <div >
+            {% for message in app.session.flashbag.get('success') %}
+                {{ message }}
+            {% endfor %}
+            <h2> New Photo </h2>
+            <a href="{{ path('album_new') }}" class="btn btn-info pull-right" role="button">Back to the list</a>
+
+        </div> </br>
+
+
+        {{ form_start(photoForm) }}
+        {{ form_widget(photoForm) }}
+
+        <button type="submit" class="btn btn-primary pull-right">Create</button>
+        {{ form_end(photoForm) }}
+    </div>
+{% endblock %}

@@ -2,21 +2,11 @@
 
 {% block body %}
     <div class="contenuIn">
-        <div >
-            {% for message in app.session.flashbag.get('success') %}
-                {{ message }}
-            {% endfor %}
-            <h2> {% if app.request.get('_route') == 'album_new' %} New {% else %} update {% endif %}album </h2>
-            <a href="{{ path('albums_list') }}" class="btn btn-info pull-right" role="button">Back to the list</a>
 
-        </div> </br>
+        {% for photo in photos %}
+            <img src="{{asset(photo.path)}}" alt="HTML5 Icon" style="width:128px;height:128px;">
+        {% endfor %}
 
-
-            {{ form_start(albumForm) }}
-            {{ form_widget(albumForm) }}
-
-            <button type="submit" class="btn btn-primary pull-right">{% if app.request.get('_route') == 'album_new' %} Create {% else %} update {% endif %}</button>
-            {{ form_end(albumForm) }}
     </div>
 {% endblock %}
 
