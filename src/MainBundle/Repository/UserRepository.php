@@ -1,7 +1,7 @@
 <?php
 
 namespace MainBundle\Repository;
-
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 /**
  * UserRepository
  *
@@ -10,4 +10,5 @@ namespace MainBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+
 }

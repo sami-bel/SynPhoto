@@ -2,161 +2,210 @@
 
 namespace MainBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * User
- *
- * @ORM\Table(name="user")
- * @ORM\Entity(repositoryClass="MainBundle\Repository\UserRepository")
+ * @ORM\Entity
+ * @UniqueEntity(fields="email", message="Email already taken")
+ * @UniqueEntity(fields="username", message="Username already taken")
  */
-class User
+class User implements UserInterface
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="nom", type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $nom;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="prenom", type="string", length=255)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $prenom;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="mail", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
      */
-    private $mail;
+    private $username;
+
 
     /**
-     * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255)
+     * @ORM\ManyToMany(targetEntity="MainBundle\Entity\Album", cascade={"remove","persist"})
+     */
+
+    private $albums;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
+
+    /**
+     * The below length depends on the "algorithm" you use for encoding
+     * the password, but this works well with bcrypt.
+     *
+     * @ORM\Column(type="string", length=64)
      */
     private $password;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="role", type="string", length=255)
+     * @ORM\Column(name="role", type="array", length=255)
      */
-    private $role;
+    private $roles;
 
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
+    public function __construct() {
+
+        $this->roles = array("ROLE_ADMIN");
+        $this->albums = new ArrayCollection();
+
     }
 
-    /**
-     * Set nom
-     *
-     * @param string $nom
-     *
-     * @return User
-     */
+    // other properties and methods
+
+    public function getId(){
+        return $this->id ;
+    }
+
+     public function getNom()
+     {
+         return $this->nom;
+     }
+
     public function setNom($nom)
     {
         $this->nom = $nom;
-
-        return $this;
     }
 
-    /**
-     * Get nom
-     *
-     * @return string
-     */
-    public function getNom()
-    {
-        return $this->nom;
-    }
-
-    /**
-     * Set prenom
-     *
-     * @param string $prenom
-     *
-     * @return User
-     */
-    public function setPrenom($prenom)
-    {
-        $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    /**
-     * Get prenom
-     *
-     * @return string
-     */
     public function getPrenom()
     {
         return $this->prenom;
     }
 
-    /**
-     * Set mail
-     *
-     * @param string $mail
-     *
-     * @return User
-     */
-    public function setMail($mail)
+    public function setPrenom($prenom)
     {
-        $this->mail = $mail;
+        $this->prenom = $prenom;
+    }
 
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+    /**
+     * @return ArrayCollection
+     */
+    public  function getAlbums()
+    {
+        return $this->albums;
+    }
+
+    /**
+     * @param $album
+     * @return $this
+     */
+    public function addAlbum($album)
+    {
+        $this->albums[] = $album;
         return $this;
     }
 
     /**
-     * Get mail
-     *
-     * @return string
+     * @param Album $album
      */
-    public function getMail()
+    public function removeAlbum($album)
     {
-        return $this->mail;
+        $this->albums->removeElement($album);
     }
 
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return User
-     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+    }
+
     public function setPassword($password)
     {
         $this->password = $password;
+    }
 
-        return $this;
+    public function getSalt()
+    {
+        // The bcrypt algorithm doesn't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
+    }
+
+    // other methods, including security methods like getRoles()
+    /**
+     * Returns the roles granted to the user.
+     *
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return (Role|string)[] The user roles
+     */
+    public function getRoles()
+    {
+        return $this->roles;
     }
 
     /**
-     * Get password
+     * Returns the password used to authenticate the user.
      *
-     * @return string
+     * This should be the encoded password. On authentication, a plain-text
+     * password will be salted, encoded, and then compared to this value.
+     *
+     * @return string The password
      */
     public function getPassword()
     {
@@ -170,21 +219,25 @@ class User
      *
      * @return User
      */
-    public function setRole($role)
+    public function setRoles($role)
     {
-        $this->role = $role;
+        $this->roles = $role;
 
         return $this;
     }
 
     /**
-     * Get role
+     * Removes sensitive data from the user.
      *
-     * @return string
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
      */
-    public function getRole()
-    {
-        return $this->role;
-    }
-}
 
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+
+}

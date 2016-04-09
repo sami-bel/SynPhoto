@@ -3,6 +3,7 @@
 namespace MainBundle\Controller;
 
 use MainBundle\Entity\AlbumPhoto;
+use MainBundle\Entity\User;
 use MainBundle\Type\AlbumType;
 use MainBundle\Entity\Album;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,17 +28,20 @@ class AlbumController extends Controller
     public function newAction(Request $request)
     {
         $file_system = new Filesystem();
-        $path = '../web/albums/';
+        $path = 'albums/';
         $album =new Album();
         $form =$this->createForm(AlbumType::class,$album);
 
         $form->handleRequest($request);
+
 
         if ($form->isValid()) {
             try {
                 $name= $form['titre']->getData();
 
                 $file_system->mkdir($path.$name);
+//                $file_system->mkdir('albums/test22');
+
 
                 $em = $this->getDoctrine()->getManager();
                 $album->setPath('albums/'.$name.'/');
@@ -141,7 +145,86 @@ class AlbumController extends Controller
         return $this->render('MainBundle:Albums:listPhoto.html.twig',array('photos' => $photos));
     }
 
+    /**
+     * @Route("/subscribe", name="albums_subscribe")
+     * @Method("POST")
+     */
+    public function SubscribeAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
 
+        if (!$album = $this->getDoctrine()->getRepository('MainBundle:Album')->findOneById($request->request->get('album_id'))) {
+            $this->addFlash('error', 'The album you want to delete does not exist.');
+
+            return $this->redirectToRoute('albums_list');
+        }
+        if (!$user = $this->getDoctrine()->getRepository('MainBundle:User')->findOneById($request->request->get('user_id'))) {
+            $this->addFlash('error', 'The user you want to delete does not exist.');
+
+            return $this->redirectToRoute('albums_list');
+        }
+
+        if ( !$user->getAlbums()->contains($album)) {
+            $user->addAlbum($album);
+            $em->persist($user);
+            $em->flush();
+        }
+        else {
+            $this->addFlash('error', 'your were subscribed in this album .');
+            return $this->redirectToRoute('albums_list');
+
+        }
+
+        return $this->redirectToRoute('albums_list');
+
+    }
+
+    /**
+     * @Route("/albums_user/{id}", name="albums_user_list")
+     *
+     */
+    public function listAlbumUserAction($id)
+    {
+        $user = $this->getDoctrine()->getRepository('MainBundle:User')->find($id);
+        $albums = $user->getAlbums();
+        return $this->render('MainBundle:Albums:listAlbumsUser.html.twig',array('albums' => $albums));
+    }
+
+    /**
+     *@Route("/unsubscribe", name="albums_unsubscribe")
+     *@Method("POST")
+     */
+    public function  unsubscribeAction(Request $request)
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        if (!$album = $this->getDoctrine()->getRepository('MainBundle:Album')->findOneById($request->request->get('album_id'))) {
+            $this->addFlash('error', 'The album you want to delete does not exist.');
+
+            return $this->redirectToRoute('albums_list');
+        }
+
+
+        if (!$user = $this->getDoctrine()->getRepository('MainBundle:User')->findOneById($request->request->get('user_id'))) {
+            $this->addFlash('error', 'The user you want to delete does not exist.');
+
+            return $this->redirectToRoute('albums_list');
+        }
+
+        $user->removeAlbum($album);
+
+        $em->persist($user);
+
+        $em->flush();
+        return $this->redirectToRoute('albums_user_list', array('id'=>$user->getID()));
+    }
+
+    /**
+     * @param $dirname
+     * @return bool
+     */
     public function delete_directory($dirname) {
         if (is_dir($dirname)) {
             $dir_handle = opendir($dirname);

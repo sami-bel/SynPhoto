@@ -6,7 +6,6 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use WebServiceBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,9 +23,11 @@ class AlbumController extends Controller
         $normalizers = array(new ObjectNormalizer());
         $serializer = new Serializer($normalizers, $encoders);
         $albums =$this->getAlbum();
+
         if ($albums != null){
 
             $albumsSer = $serializer->serialize($albums, 'json');
+
         }
 
         else {$rps ='l utilisateur n existe pas ' ;
@@ -35,12 +36,13 @@ class AlbumController extends Controller
 
         $response = new Response($albumsSer);
         $response->headers->set('Content-Type', 'application/json');
+        
         return $response;
         //return new Response('ok');
     }
 
     private function getAlbum(){
-        $album = $this->getDoctrine()->getRepository('WebServiceBundle:Album')->findall();
+        $album = $this->getDoctrine()->getRepository('MainBundle:Album')->findall();
         return $album;
     }
 

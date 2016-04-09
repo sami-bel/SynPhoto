@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/main/js/slick/slick/slick.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/main/js/slick/slick/slick-theme.css') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet"  href="{{ asset('bundles/main/css/style.css') }}" type="text/css" media="screen"/>
+        <link rel="stylesheet"  href="{{ asset('bundles/main/css/bootstrap.min.css') }}" type="text/css" media="screen"/>
+
+
+
+
+
+    </head>
+    <body>
+
+        <header>
+
+               <div>
+                    <div class="hero">
+                        <h1> SynPhoto </h1>
+                    </div>
+
+
+               </div>
+
+        </header>
+
+
+        <section class="container">
+            <nav id="navigation">
+                <ul class="nav nav-tabs  ">
+                    <li  class="active"><a href="{{ path('homepage') }}">Home</a></li>
+                    {% if is_granted('ROLE_USER') %}
+                    <li ><a href="{{ path("albums_list") }}">Albums</a></li>
+
+                    <li ><a href="{{ path("photo_new") }}">Photo</a></li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li ><a href="{{ path("user_registration") }}">Register</a></li>
+                    {% endif %}
+                    <li ><a href="{{ path("login") }}">Connexion</a></li>
+                </ul>
+            </nav>
+            <div class="contenu">
+                {% block body %}
+
+                {% endblock %}
+            </div>
+
+        </section>
+
+        {% block javascripts %}
+            <script src="{{ asset("bundles/main/js/jquery.js") }}"></script>
+            <script src="{{ asset("bundles/main/js/jquery-migrate.js") }}"></script>
+            <script src="{{ asset("bundles/main/js/slick/slick/slick.min.js") }}"></script>
+            <script src="{{ asset("bundles/main/js/slider.js") }}"></script>
+
+        {% endblock %}
+    </body>
+</html>

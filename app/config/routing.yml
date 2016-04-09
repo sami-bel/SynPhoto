@@ -1,3 +1,8 @@
+user:
+    resource: "@UserBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 main:
     resource: "@MainBundle/Controller/"
     type:     annotation
@@ -11,3 +16,6 @@ web_service:
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+
+logout:
+    path:  /logout

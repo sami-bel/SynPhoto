@@ -18,7 +18,9 @@ class PhotoType extends AbstractType
             ->add('album', EntityType::class, array(
                 'class' => 'MainBundle:Album',
                 'choice_label' => 'titre',
-                'mapped' =>false))
+                'mapped' =>false,
+                'multiple' =>true
+            ))
             ->add('image',FileType::class, array('label' => 'image','mapped' =>false));
     }
 }

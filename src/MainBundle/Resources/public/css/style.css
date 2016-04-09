@@ -29,3 +29,9 @@ body
 #someid tr td:nth-child(1){
   width:15%;
 }
+
+.carousel-inner > .item > img
+{
+  width: 70%;
+  margin: auto;
+}

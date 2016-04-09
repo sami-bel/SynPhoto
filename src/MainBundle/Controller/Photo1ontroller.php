@@ -9,44 +9,39 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class PhotoController extends Controller
 {
     /**
      *
-     * @Route("/new_photo", name="photo_new")
+     * @Route("/newp", name="photo_new")
      */
     public function newAction(Request $request)
     {
 
         $photo = new Photo();
-
+        $albumPhoto =new AlbumPhoto();
         $form = $this->createForm(PhotoType::class, $photo);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $fileName = md5(uniqid());
-            $photo->setName($fileName);
-            $em->persist($photo);
             $albums =$form['album']->getData();
-            $file = $form['image']->getData(); // recuperer l image
-            $tmp = $file->getPathname();
 
+            $fileName = md5(uniqid());
             foreach ($albums as $album){
-                $albumPhoto =new AlbumPhoto();
-                copy($tmp,$album->getPath().'/'.$fileName);
-                $albumPhoto->setPhoto($photo);
-                $albumPhoto->setAlbum($album);
-                $albumPhoto->setPath($album->getPath().$fileName);
-                $em->persist($albumPhoto);
+            $form['image']->getData()->move($album->getPath(),$fileName);
             }
-
+            $photo->setName($fileName);
+            $albumPhoto->setPhoto($photo);
+            $albumPhoto->setAlbum($album);
+            $albumPhoto->setPath($album->getPath().$fileName);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($photo);
+            $em->persist($albumPhoto);
             $em->flush();
-            $this->addFlash('success', 'The photo has been successfully added.');
+            $this->addFlash('success', 'The albums has been successfully added.');
             return $this->redirectToRoute('photo_new');
 
         }

@@ -1,0 +1,17 @@
+{% extends 'MainBundle::layout.html.twig' %}
+{% block bodyLayout  %}
+    <div class="contentAlbum">
+
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <button type="submit" class="btn btn-primary pull-right"> Create </button>
+        {{ form_end(form) }}
+
+
+
+
+
+    </div>
+{% endblock %}

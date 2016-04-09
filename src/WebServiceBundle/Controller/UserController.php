@@ -16,16 +16,20 @@ class UserController extends Controller
      * @Route("/api/service" )
      */
     public function newAction(Request $request)
+
     {
+
         $body =$request->getContent();
         $data = json_decode($body, true);
         $mail =$data['mail'];
         $pswd =$data['password'];
+
         $resultat =array();
         /**
          * tester l existance d'un user
          */
         $user = $this->isUser($mail,$pswd);
+
         if(!is_null($user))
         {
             $resultat ['resultat'] = $this->tokenGenerate();
@@ -46,12 +50,21 @@ class UserController extends Controller
     /*
      * Verifier si l utilisateur existe et le mot de passe est bon ?
      */
-    private function isUser($mail, $password){
-        $user = $this->getDoctrine()->getRepository('MainBundle:User')->findOneByMail($mail);
+    private function isUser($mail, $paswd){
+        $user = $this->getDoctrine()->getRepository('MainBundle:User')->findOneByEmail($mail);
         if (is_object($user)){
 
-            if ($user->getPassword() == $password)
+            $p = $user->getPassword();
+
+            if (password_verify('lmd041188', $paswd)) $password = true;
+             else $password =false;
+
+            if ($password)
+            {
+
                 return $user;
+
+            }
             else return null;
 
         }

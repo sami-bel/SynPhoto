@@ -1,12 +1,28 @@
-{% extends 'base.html.twig' %}
+{% extends 'MainBundle::layout.html.twig' %}
+{% block bodyLayout  %}
+    <a href="{{ path('photo_new') }}" class="btn btn-info pull-right" role="button"> Delete</a>
 
-{% block body %}
-    <div class="contenuIn">
+    <div class="contentAlbum">
 
-        {% for photo in photos %}
-            <img src="{{asset(photo.path)}}" alt="HTML5 Icon" style="width:128px;height:128px;">
-        {% endfor %}
+      <div class="slider" >
 
+          
+          {#<div style="width: 100vw;">#}
+              {#<img style="width: 100%;" src="http://psycho-therapie-toulouse.fr/wp-content/uploads/2015/06/7.jpg">#}
+          {#</div>#}
+          {#<div style="width: 100vw;">#}
+              {#<img  src="https://cdn.photographylife.com/wp-content/uploads/2014/06/Nikon-D810-Image-Sample-6.jpg">#}
+          {#</div>#}
+
+               {% for photo in photos %}
+
+                    <div  style="width: 100vw; height: 70vh;">
+                        <img style="width: 63vw; height: 70vh;"  src="{{asset(photo.path)}}" />
+                    </div>
+               {% endfor %}
+
+        {#<img src="{{asset(photo.path)}}" alt="HTML5 Icon" >#}
+      </div>
     </div>
 {% endblock %}
 

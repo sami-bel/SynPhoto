@@ -9,7 +9,9 @@
         </div> </br>
         <div>
 
-            <h1>Albums list</h1>
+        <h1>Albums </h1>
+
+
 
             <table class="table table-hover" id="someid">
                 <thead>
@@ -31,12 +33,6 @@
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete_album') }}" />
                                 <a href="{{ path ('album_update',{ 'id': album.id }) }}" > Edit </a>
                                 <button class="btn btn-link">Delete</button>
-
-                            </form>
-                            <form action="{{ path('albums_subscribe') }}" method="POST">
-                                <input type="hidden" id="form_id" name="album_id" class="form-control" value="{{ album.id }}" />
-                                <input type="hidden" name="user_id" class="form-control" value="{{ app.user.id }}" />
-                                <button class="btn btn-link">Subscribe</button>
 
                             </form>
 

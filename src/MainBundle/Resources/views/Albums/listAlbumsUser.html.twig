@@ -26,17 +26,10 @@
                         <td>{{ album.description }}</td>
                         <td>
 
-                            <form action="{{ path('albums_delete') }}" method="POST">
-                                <input type="hidden" id="form_id" name="album_id" class="form-control" value="{{ album.id }}" />
-                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete_album') }}" />
-                                <a href="{{ path ('album_update',{ 'id': album.id }) }}" > Edit </a>
-                                <button class="btn btn-link">Delete</button>
-
-                            </form>
-                            <form action="{{ path('albums_subscribe') }}" method="POST">
+                            <form action="{{ path('albums_unsubscribe') }}" method="POST">
                                 <input type="hidden" id="form_id" name="album_id" class="form-control" value="{{ album.id }}" />
                                 <input type="hidden" name="user_id" class="form-control" value="{{ app.user.id }}" />
-                                <button class="btn btn-link">Subscribe</button>
+                                <button class="btn btn-link">Unsubscribe</button>
 
                             </form>
 
@@ -51,4 +44,5 @@
         </div>
     </div>
 {% endblock %}
+
 
